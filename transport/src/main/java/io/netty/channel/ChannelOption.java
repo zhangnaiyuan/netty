@@ -18,6 +18,7 @@ package io.netty.channel;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.util.AbstractConstant;
 import io.netty.util.ConstantPool;
+import io.netty.util.internal.ObjectUtil;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -65,7 +66,10 @@ public class ChannelOption<T> extends AbstractConstant<ChannelOption<T>> {
     /**
      * Creates a new {@link ChannelOption} for the given {@code name} or fail with an
      * {@link IllegalArgumentException} if a {@link ChannelOption} for the given {@code name} exists.
+     *
+     * @deprecated use {@link #valueOf(String)}.
      */
+    @Deprecated
     @SuppressWarnings("unchecked")
     public static <T> ChannelOption<T> newInstance(String name) {
         return (ChannelOption<T>) pool.newInstance(name);
@@ -78,6 +82,7 @@ public class ChannelOption<T> extends AbstractConstant<ChannelOption<T>> {
     public static final ChannelOption<Integer> CONNECT_TIMEOUT_MILLIS = valueOf("CONNECT_TIMEOUT_MILLIS");
     /**
      * @deprecated Use {@link MaxMessagesRecvByteBufAllocator}
+     * and {@link MaxMessagesRecvByteBufAllocator#maxMessagesPerRead(int)}.
      */
     @Deprecated
     public static final ChannelOption<Integer> MAX_MESSAGES_PER_READ = valueOf("MAX_MESSAGES_PER_READ");
@@ -145,8 +150,6 @@ public class ChannelOption<T> extends AbstractConstant<ChannelOption<T>> {
      * may override this for special checks.
      */
     public void validate(T value) {
-        if (value == null) {
-            throw new NullPointerException("value");
-        }
+        ObjectUtil.checkNotNull(value, "value");
     }
 }
